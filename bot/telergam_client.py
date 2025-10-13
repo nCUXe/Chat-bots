@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv()
+load_dotenv() 
 
 
 def makeRequest(method: str, **param) -> dict:
