@@ -26,12 +26,16 @@ def makeRequest(method: str, **param) -> dict:
         return response_json["result"]
     
 
-def getUpdates(offset: int) -> dict:
-    return makeRequest("getUpdates", offset=offset)
+def getUpdates(**params) -> dict:
+    return makeRequest("getUpdates", **params)
 
 
-def sendMessage(chat_id: int, text: str) -> dict:
-    return makeRequest("sendMessage", chat_id=chat_id, text=text)
+def sendMessage(chat_id: int, text: str, **params) -> dict:
+    return makeRequest("sendMessage", chat_id=chat_id, text=text, **params)
+
+
+def sendPhoto(chat_id: int, photo: str, **params) -> dict:
+    return makeRequest("sendPhoto", chat_id=chat_id, photo=photo, **params)
 
 
 def getMe() -> dict:
