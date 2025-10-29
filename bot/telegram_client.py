@@ -18,7 +18,7 @@ def makeRequest(metgod: str, **params) -> dict:
     with urllib.request.urlopen(request) as responce:
         responce_body = responce.read().decode("utf-8")
         responce_json = json.loads(responce_body)
-        assert responce_json["ok"] == True
+        assert responce_json["ok"]
         return responce_json["result"]
 
 
