@@ -8,14 +8,13 @@ class PizzaOrder(Handler):
     def can_handle(self, update: dict, state: str, order_json: dict):
         if "callback_query" not in update:
             return False
-        
+
         if state != "WHAIT_FOR_DRINKS":
             return False
-        
+
         callback_data = update["callback_query"]["data"]
         return callback_data.startswith("drink_")
-    
-    
+
     def handle(self, update: dict, state: str, order_json: dict):
         telegram_id = update["callback_query"]["from"]["id"]
         callback_data = update["callback_query"]["data"]
@@ -34,8 +33,8 @@ class PizzaOrder(Handler):
         bot.database_client.update_user_state(telegram_id, "WHAIT_FOR_APROVE")
         bot.telegram_client.answerCallbackQuery(update["callback_query"]["id"])
         bot.telegram_client.deleteMessage(
-            chat_id = update["callback_query"]["message"]["chat"]["id"],
-            message_id = update["callback_query"]["message"]["message_id"]
+            chat_id=update["callback_query"]["message"]["chat"]["id"],
+            message_id=update["callback_query"]["message"]["message_id"],
         )
         new_order_json = bot.database_client.get_user_order(telegram_id)
         if new_order_json:
@@ -44,9 +43,9 @@ class PizzaOrder(Handler):
             order_text = "No order found"
 
         bot.telegram_client.sendMessage(
-            chat_id = update["callback_query"]["message"]["chat"]["id"],
-            text = order_text,
-            reply_markup = json.dumps(
+            chat_id=update["callback_query"]["message"]["chat"]["id"],
+            text=order_text,
+            reply_markup=json.dumps(
                 {
                     "inline_keyboard": [
                         [
@@ -55,6 +54,6 @@ class PizzaOrder(Handler):
                         ],
                     ]
                 }
-            )
+            ),
         )
         return HandlerStatus.STOP

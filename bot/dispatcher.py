@@ -2,15 +2,14 @@ import json
 from bot.database_client import get_user
 from bot.handlers.handler import Handler, HandlerStatus
 
+
 class Dispatcher:
     def __init__(self):
         self._handlers: list[Handler] = []
 
-
     def add_handlers(self, *handlers: list[Handler]) -> None:
         for handler in handlers:
             self._handlers.append(handler)
-
 
     def _get_telegram_id_from_update(self, update: dict) -> int | None:
         if "message" in update:
@@ -18,7 +17,6 @@ class Dispatcher:
         elif "callback_query" in update:
             return update["callback_query"]["from"]["id"]
         return None
-
 
     def dispatch(self, update: dict) -> None:
         telegram_id = self._get_telegram_id_from_update(update)
@@ -35,4 +33,5 @@ class Dispatcher:
         for handler in self._handlers:
             if handler.can_handle(update, user_state, order_json):
                 status = handler.handle(update, user_state, order_json)
-                if status == HandlerStatus.STOP: break
+                if status == HandlerStatus.STOP:
+                    break
