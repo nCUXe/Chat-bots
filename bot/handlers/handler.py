@@ -1,3 +1,6 @@
+from bot.domain.messenger import Messenger
+from bot.domain.storage import Storage
+
 from abc import ABC, abstractmethod
 from enum import Enum
 
@@ -9,7 +12,21 @@ class HandlerStatus(Enum):
 
 class Handler(ABC):
     @abstractmethod
-    def can_handle(self, update: dict, state: str, order_json: dict) -> bool: ...
+    def can_handle(
+        self,
+        update: dict,
+        state: str,
+        order_json: dict,
+        storage: Storage,
+        messenger: Messenger,
+    ) -> bool: ...
 
     @abstractmethod
-    def handle(self, update: dict, state: str, order_json: dict) -> HandlerStatus: ...
+    def handle(
+        self,
+        update: dict,
+        state: str,
+        order_json: dict,
+        storage: Storage,
+        messenger: Messenger,
+    ) -> HandlerStatus: ...
