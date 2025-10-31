@@ -53,7 +53,7 @@ class StorageSqlite(Storage):
                     "INSERT INTO users (telegram_id) VALUES (?)", (telegram_id,)
                 )
 
-    def cleare_user_state_and_order(self, telegram_id: int) -> None:
+    def cleare_user_state_and_orderee(self, telegram_id: int) -> None:
         with sqlite3.connect(os.getenv("SQLITE_DATABASE_PATH")) as connection:
             with connection:
                 connection.execute(

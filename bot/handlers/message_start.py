@@ -32,12 +32,12 @@ class MessageStart(Handler):
 
         telegram_id = update["message"]["from"]["id"]
 
-        storage.cleare_user_state_and_order(telegram_id)
+        storage.clear_user_state_and_order(telegram_id)
         storage.update_user_state(telegram_id, "WHAIT_FOR_PIZZA_NAME")
 
         messenger.sendMessage(
             chat_id=update["message"]["chat"]["id"],
-            text="Whelcome to Pizza shop!",
+            text="Welcome to Pizza shop!",
             reply_markup=json.dumps({"remove_keyboard": True}),
         )
 

@@ -1,3 +1,4 @@
 python_dotenv
 black
 ruff
+pytest
