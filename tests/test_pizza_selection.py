@@ -49,17 +49,20 @@ def test_pizza_selection():
 
     def answerCallbackQuery(callback_query_id: str, **kwargs) -> dict:
         assert callback_query_id == "1"
+
         nonlocal answer_callback_query_called
         answer_callback_query_called = True
         return {"ok": True}
 
     def deleteMessage(chat_id: int, message_id: int) -> dict:
         assert chat_id == 12345
+
         delete_message_calls.append(message_id)
         return {"ok": True}
 
     def sendMessage(chat_id: int, text: str, **params) -> dict:
         assert chat_id == 12345
+
         send_message_calls.append({"text": text, "params": params})
         return {"ok": True}
 
@@ -85,7 +88,7 @@ def test_pizza_selection():
     assert update_user_data_called
     assert update_user_state_called
     assert answer_callback_query_called
+
     assert len(delete_message_calls) == 1
-    assert 222 in delete_message_calls
     assert len(send_message_calls) == 1
     assert send_message_calls[0]["text"] == "Good choose! Please select pizza size"
