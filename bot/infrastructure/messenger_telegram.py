@@ -15,11 +15,11 @@ class MessengerTelegram(Messenger):
     def _get_telegram_file_uri(self) -> str:
         return f"https://api.telegram.org/file/bot{os.getenv('TELEGRAM_TOKEN')}"
 
-    def makeRequest(self, metgod: str, **params) -> dict:
-        json_data = json.dumps(params).encode("utf-8")
+    def makeRequest(self, method: str, **kwargs) -> dict:
+        json_data = json.dumps(kwargs).encode("utf-8")
         request = urllib.request.Request(
             method="POST",
-            url=f"{os.getenv("TELEGRAM_BASE_URI")}/{metgod}",
+            url=f"{self._get_telegram_base_uri()}/{method}",
             data=json_data,
             headers={"Content-Type": "application/json"},
         )
@@ -30,11 +30,11 @@ class MessengerTelegram(Messenger):
             assert responce_json["ok"]
             return responce_json["result"]
 
-    def getUpdates(self, **params) -> dict:
-        return self.makeRequest("getUpdates", **params)
+    def getUpdates(self, **kwargs) -> dict:
+        return self.makeRequest("getUpdates", **kwargs)
 
-    def sendMessage(self, chat_id: int, text: str, **params) -> dict:
-        return self.makeRequest("sendMessage", chat_id=chat_id, text=text, **params)
+    def sendMessage(self, chat_id: int, text: str, **kwargs) -> dict:
+        return self.makeRequest("sendMessage", chat_id=chat_id, text=text, **kwargs)
 
     def deleteMessage(self, chat_id: int, message_id: int) -> dict:
         return self.makeRequest("deleteMessage", chat_id=chat_id, message_id=message_id)
