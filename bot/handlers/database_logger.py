@@ -1,6 +1,10 @@
-from bot.handlers.handler import Handler, HandlerStatus
-from bot.domain.storage import Storage
+
 from bot.domain.messenger import Messenger
+from bot.domain.storage import Storage
+from bot.handlers.handler import Handler, HandlerStatus
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class DatabaseLogger(Handler):
@@ -14,13 +18,13 @@ class DatabaseLogger(Handler):
     ) -> bool:
         return True
 
-    def handle(
+    async def handle(
         self,
         update: dict,
         state: str,
         order_json: dict,
         storage: Storage,
         messenger: Messenger,
-    ) -> HandlerStatus:
-        storage.persist_update(update)
+    ) -> bool:
+        await storage.persist_update(update)
         return HandlerStatus.CONTINUE

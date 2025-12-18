@@ -1,26 +1,24 @@
 VENV_DIR = .venv
+ACTIVATE_VENV := . $(VENV_DIR)/bin/activate
 
 $(VENV_DIR):
-	python3 -m venv $(VENV_DIR) && \
-	$(VENV_DIR)/bin/pip install --upgrade pip && \
-	$(VENV_DIR)/bin/pip install -r requirements.txt
+	python3 -m venv $(VENV_DIR)
+	$(ACTIVATE_VENV) && pip install --upgrade pip
+	$(ACTIVATE_VENV) && pip install --requirement requirements.txt
 
 install: $(VENV_DIR)
 
 black: $(VENV_DIR)
-	$(VENV_DIR)/bin/black .
+	$(ACTIVATE_VENV) && black .
 
 ruff: $(VENV_DIR)
-	$(VENV_DIR)/bin/ruff check .
+	$(ACTIVATE_VENV) && ruff check .
 
 pytest: $(VENV_DIR)
-	PYTHONPATH=. $(VENV_DIR)/bin/pytest
+	$(ACTIVATE_VENV) && PYTHONPATH=. pytest
 
 test: black ruff pytest
 
-#
-# Docker commands
-#
 
 DOCKER_NETWORK=pizza_bot_network
 
@@ -47,6 +45,10 @@ postgres_run: docker_volume docker_net
 	  -e POSTGRES_DB="$(POSTGRES_DATABASE)" \
 	  -p "$(POSTGRES_HOST_PORT):$(POSTGRES_CONTAINER_PORT)" \
 	  -v $(POSTGRES_VOLUME):/var/lib/postgresql/data \
+	  --health-cmd="pg_isready -U $(POSTGRES_USER)" \
+	  --health-interval=10s \
+	  --health-timeout=5s \
+	  --health-retries=5 \
 	  --network $(DOCKER_NETWORK) \
 	  postgres:17
 
@@ -57,7 +59,7 @@ postgres_stop:
 build:
 	docker build \
 	  -t $(BOT_IMAGE) \
-	  --platform linux/amd64 \
+	  --platform linux \
 	  -f Dockerfile \
 	  .
 
